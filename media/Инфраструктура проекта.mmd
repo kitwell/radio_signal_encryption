@@ -1,0 +1,40 @@
+---
+config:
+  layout: elk
+  theme: redux
+---
+flowchart TB
+ subgraph s1["Предприятие"]
+        KeyProd1["КЦР Контур УЦ"]
+        KeyProd2["КриптоПро УЦ 2.0"]
+        KeyProd3["ViPNet SIEs HSM"]
+        KEY["Формирование ключа"]
+        PC["ПК для настройки"]
+        SDK["ViPNet SIEs Development Kit"]
+        Load["ViPNet SIEs<br>Nano Loader"]
+        RS232["USB-RS232<br>адаптер"]
+  end
+ subgraph s2["Контроллер"]
+        MICR1["Микроконтроллер<br>ViPNet SIEs Core Nano"]
+        SPEC1["Радиомодем<br>СПЕКТР-433 IP65<br> с антенной"]
+  end
+ subgraph subGraph2["Агропромышленная техника"]
+        MICR2["Микроконтроллер<br>ViPNet SIEs Core Nano"]
+        SPEC2["Радиомодем<br>СПЕКТР-433 IP65<br> с антенной"]
+  end
+ subgraph subGraph3["На технике и контроллере"]
+        s2
+        subGraph2
+  end
+    KeyProd1 -- или --> KEY
+    KeyProd2 -- или --> KEY
+    KeyProd3 -- или --> KEY
+    KEY --> SDK
+    SDK -- ПО --> PC
+    PC -- Ключи --> Load
+    Load --> MICR1 & MICR2
+    MICR1 <-- "Данные через UART-RS485" --> SPEC1
+    MICR2 <-- "Данные через UART-RS485" --> SPEC2
+    SPEC1 <-- Данные по радиоканалу --> SPEC2
+    RS232 --> SPEC1 & SPEC2
+    PC -- Настройка<br>радиомодемов --> RS232
