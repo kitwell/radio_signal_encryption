@@ -158,7 +158,7 @@ class Entity:
         msg_type = "Команда" if msg['msg_type'] == MSG_TYPE_COMMAND else "Подтверждение"
         lines = []
         lines.append("  Пакет:")
-        lines.append(f"    Заголовок: версия={PROTOCOL_VERSION}, тип={msg_type}")
+        lines.append(f"    Заголовок: версия={PROTOCOL_VERSION}, тип={msg_type} (4 байта)")
         lines.append(f"    ID отправителя: {msg['sender']} ({len(msg['sender'])} байт)")
         lines.append(f"    ID получателя: {msg['receiver']} ({len(msg['receiver'])} байт)")
         lines.append(f"    Номер пакета: {msg['packet_number']} (4 байта)")
@@ -167,9 +167,9 @@ class Entity:
         sig_len = len(msg['signature'])
         r, s = self.provider.get_signature_components(msg['signature'])
         if r and s:
-            lines.append(f"    Электронная подпись: r={r[:16]}..., s={s[:16]}... ({sig_len} байт)")
+            lines.append(f"    Электронная подпись: r={r}, s={s} ({sig_len} байт)")
         else:
-            lines.append(f"    Электронная подпись: {msg['signature'].hex()[:32]}... ({sig_len} байт)")
+            lines.append(f"    Электронная подпись: {msg['signature'].hex()} ({sig_len} байт)")
         lines.append(f"    Итоговая длина пакета: {msg['packet_length']} байт")
         return "\n".join(lines)
 
